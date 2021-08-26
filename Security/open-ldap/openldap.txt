@@ -1,0 +1,93 @@
+  137  slappasswd
+  138  yum -y install openldap-servers openldap-clients 
+  139  cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG 
+  140  chown ldap. /var/lib/ldap/DB_CONFIG 
+  141  /etc/rc.d/init.d/slapd start 
+  142  chkconfig slapd on 
+  143  slappasswd 
+  144  vi chrootpw.ldif 
+  145  ldapadd -Y EXTERNAL -H ldapi:/// -f chrootpw.ldif 
+  146  vi chdomain.ldif
+  147  ldapmodify -Y EXTERNAL -H ldapi:/// -f chdomain.ldif 
+  148  vi basedomain.ldif 
+  149  ldapadd -x -D cn=Manager,dc=srv,dc=world -W -f basedomain.ldif 
+  150  ldapadd -x -D cn=Manager,dc=open,dc=ldap -W -f basedomain.ldif 
+  151  vi basedomain.ldif 
+  152  ldapadd -x -D cn=Manager,dc=open,dc=ldap -W -f basedomain.ldif 
+  153  iptables -I INPUT 5 -p tcp -m state --state NEW -m tcp --dport 389 -j ACCEPT
+  154  service httpd restart
+  155  /etc/rc.d/init.d/httpd restar
+  156  /etc/rc.d/init.d/httpd restart
+  157  vi /etc/php.ini 
+  158  /etc/rc.d/init.d/httpd restart 
+  159  hostname -i
+  160  reboot
+  161  hostname open.ldap
+  162  bash
+  163  yum -y install httpd
+  164  rm -f /etc/httpd/conf.d/welcome.conf
+  165  rm -f /var/www/error/noindex.html
+  166  vi /etc/httpd/conf/httpd.conf
+  167  /etc/rc.d/init.d/httpd start 
+  168  chkconfig httpd on 
+  169  iptables -I INPUT 5 -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
+  170  service iptables status
+  171  iptables -I INPUT 5 -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
+  172  vi /var/www/html/index.html
+  173  hostname -i
+  174  service iptables start
+  175  iptables -I INPUT 5 -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
+  176  iptables -L
+  177  hostname -f
+  178  service https status
+  179  service httpd status
+  180  cd /var/www/
+  181  ll
+  182  cd html/
+  183  ll
+  184  cat index.html 
+  185  hostname -i
+  186  vi /etc/httpd/conf/httpd.conf
+  187  service httpd restart
+  188  vi /etc/httpd/conf/httpd.conf
+  189  service httpd restart
+  190  vi /etc/httpd/conf/httpd.conf
+  191  service httpd restart
+  192  telnet http://192.168.100.15:80
+  193  telnet http://192.168.100.15 80
+  194  telnet 192.168.100.15 80
+  195  yum install telnet
+  196  telnet 192.168.100.15 80
+  197  telnet 192.168.100.15
+  198  ifconfig
+  199  vi /etc/host
+  200  vi /etc/hosts
+  201  ping openldap
+  202  telnet 192.168.100.15
+  203  telnet 192.168.100.50:80
+  204  vi /etc/httpd/conf/httpd.conf
+  205  service httpd restart
+  206  yum -y install php php-mbstring php-pear
+  207  vi /etc/php.ini 
+  208  /etc/rc.d/init.d/httpd restart 
+  209   vi /var/www/html/index.php 
+  210  yum --enablerepo=epel -y install phpldapadmin 
+  211  vi /etc/phpldapadmin/config.php 
+  212  vi /etc/httpd/conf.d/phpldapadmin.conf 
+  213  /etc/rc.d/init.d/httpd restart 
+  214  /etc/rc.d/init.d/httpd stop
+  215  vi /etc/httpd/conf.d/phpldapadmin.conf 
+  216  vi /etc/httpd/conf/httpd.conf
+  217  vi /etc/sysconfig/network
+  218  ping opne.ldap
+  219  bash
+  220  ping google.com
+  221  d
+  222  ping google.com
+  223  vi /etc/sysconfig/network
+  224  vi /etc/hosts
+  225  hostname openldap
+  226  bash
+  227  hostname -f
+  228  hostname 
+  229  service httpd start

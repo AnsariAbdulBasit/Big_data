@@ -1,0 +1,8 @@
+tez.am.resource.memory.mb = 6000  (same as yarn.scheduler.minimum-allocation-mb 7680 )
+
+tez.task.resource.memory.mb = 7680
+
+tez.runtime.io.sort.mb = 5000 (40% of tez container 3600)
+tez.runtime.io.sort.mb is the memory when the output needs to be sorted.
+
+hive.tez.container.zize = 9000 (Multiple of yarn.scheduler.minimum-allocate-mb = )

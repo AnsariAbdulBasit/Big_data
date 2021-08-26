@@ -1,0 +1,193 @@
+install ambari with HDP
+
+
+## copy paste following commands one by one
+
+sudo apt-get install -y ant
+sudo apt-get install -y gcc g++
+sudo apt-get install -y libkrb5-dev libmysqlclient-dev
+sudo apt-get install -y libssl-dev libsasl2-dev libsasl2-modules-gssapi-mit
+sudo apt-get install -y libsqlite3-dev
+sudo apt-get install -y libtidy-0.99-0 libxml2-dev libxslt-dev
+sudo apt-get install -y maven
+sudo apt-get install -y libldap2-dev
+sudo apt-get install -y python-dev python-simplejson python-setuptools
+
+
+##Download Hue
+
+ wget https://dl.dropboxusercontent.com/u/730827/hue/releases/3.8.1/hue-3.8.1.tgz
+
+##extract
+
+tar -xzvf hue-3.8.1.tgz
+
+##Install java oracle 8
+
+1- update oracle repo
+sudo add-apt-repository -y ppa:webupd8team/java
+
+2-
+sudo apt-get update
+
+ 
+3
+sudo apt-get install -y oracle-java8-installer
+
+
+#set variable into .bashrc
+
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export PATH=$PATH:$JAVA_HOME
+
+
+sudo chown -R ubuntu:ubuntu /usr/local/hue
+
+
+
+
+##make install hue
+
+cd hue-3.8.1
+sudo make install
+
+
+
+
+
+
+We need to do three things, 
+(1) ensure WebHDFS is enabled, 
+(2) add ‘proxy’ user hosts and groups for HUE, and 
+(3) enable HDFS file access control lists (FACLs) (optional).
+
+##HDFS
+
+step 1
+ 	goto HDFS click advance
+	click custom core-site.xml
+
+	add property
+
+	a. hadoop.proxyuser.hue.hosts  *
+	b. hadoop.proxyuser.hue.groups  *
+
+	a. hadoop.proxyuser.oozie.hosts  *
+	b. hadoop.proxyuser.oozie.groups  *
+
+step 2 ## enable FACLs
+
+	goto HDFS click advance
+	click Custom hdfs-site.xml
+	
+	add property
+	dfs.namenode.acls.enabled  true
+
+
+##oozie	
+	
+##set oozie proxy user for hue
+
+	goto oozie click config -> advance
+	click Custom oozie-site
+
+	add property
+
+	a. oozie.service.ProxyUserService.proxyuser.hue.hosts    *
+	b. oozie.service.ProxyUserService.proxyuser.hue.groups     *
+
+##hive
+
+
+##set webhcat proxy user for hue
+
+	goto hive click config -> advance
+	click Custom webhcat-site
+
+
+	add property
+
+	a. webhcat.proxyuser.hue.hosts     *
+	b. webhcat.proxyuser.hue.groups   *
+
+
+
+###### important part ########
+### you have to update hue.ini file with your FDQN and keys
+
+
+ cd /usr/local/hue/desktop/conf/
+
+sudo vi hue.ini
+
+
+1 - secret_key=ffsfdfdsdfdsfdsfdsfsdfteylalgfkdsjgsfdgfsg
+2 - fs_defaultfs=hdfs://your namenode private dns:8020
+3 - webhdfs_url=http://your namenode private dns:50070/webhdfs/v1
+
+
+yarn_cluster
+
+	resourcemanager_host=your rm private DNS
+	resourcemanager_api_url=your rm private DNS
+	proxy_api_url=http://proxy url or your rm private DNS
+	history_server_api_url=http://your history server private DNS
+
+
+liboozie
+
+	oozie_url=http://oozie private DNS:11000/oozie
+
+beesmax (hive)
+
+	hive_server_host=your hive server2 private DNS
+	hive_server_port=10000
+
+hbase (if not installed skip it)
+
+	hbase_clusters=(Cluster|your hbase private DNS:9090)
+
+
+app_blacklist=security,impala,hbase
+
+
+
+########################## Start hue supervisor############################
+
+cd /usr/local/hue/build/env/bin/
+./supervisor
+
+
+
+
+
+#########  owner ship of hive data  #############
+
+ hadoop fs -mkdir /sameer
+hdfs@ip-172-31-23-164:~$ hadoop fs -put eventlog.log /sameer
+hdfs@ip-172-31-23-164:~$ hadoop fs -chown -R admin:hdfs /sameer
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,12 @@
+Hdfs@1407
+Muneeb@1243
+
+issue in last line of steps: check basedomain file and edit (dc) value:
+
+
+
+error:  Fatal error: Call to undefined function bindtextdomain() in /usr/local/apache2/htdocs/phpldapadmin-1.2.2/lib/common.php on line 267
+resolved: install php5-gettext  (restart apache2)
+
+error: phpldapadmin Fatal error: Call to undefined function ldap_explode_dn()
+resolved: install php-ldap   (restart apache2)

@@ -1,0 +1,8 @@
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.merge.orcfile.stripe.level=true;
+set hive.merge.tezfiles=true;
+SET hive.merge.mapfiles=true;
+SET hive.merge.mapredfiles=true;
+SET hive.merge.size.per.task=134217728;
+SET hive.merge.smallfiles.avgsize=134217728;

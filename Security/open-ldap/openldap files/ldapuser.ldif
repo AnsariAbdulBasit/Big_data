@@ -1,0 +1,27 @@
+dn: uid=ec2-user,ou=People,dc=test,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+sn: created
+givenName: cloud-init
+cn: cloud-init created
+displayName: cloud-init created
+uidNumber: 1000
+gidNumber: 100
+userPassword: {crypt}!
+gecos: cloud-init created
+loginShell: /bin/bash
+homeDirectory: /home/ec2-user
+shadowExpire: -1
+shadowFlag: 0
+shadowWarning: 7
+shadowMin: 0
+shadowMax: 99999
+shadowLastChange: 17848
+
+dn: cn=users,ou=Group,dc=test,dc=com
+objectClass: posixGroup
+cn: users
+gidNumber: 100
+memberUid: ec2-user
+

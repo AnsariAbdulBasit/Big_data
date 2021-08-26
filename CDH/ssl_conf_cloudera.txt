@@ -1,0 +1,70 @@
+Configuring TLS Encryption Only for Cloudera Manager:(Using Self-Signed Certificates for TLS)
+======================================================
+
+1. Create the directory for the certificates:
+   $ mkdir -p /opt/cloudera/security/x509/ /opt/cloudera/security/jks/
+   $ cd /opt/cloudera/security/jks
+
+2.Generate the key pair and self-signed certificate, and store these in the keystore (example.keystore). Set -keypass to the same value as -storepass (Cloudera Manager does not support separate values for keypass and storepass.) 
+	keytool -genkeypair -keystore example.keystore -keyalg RSA -alias centosnn  -dname "CN=centosnn.hadoop.com,OU=Security,O=Example,L=Denver,ST=Colorado,C=US" -storepass hadoop@ssl -keypass hadoop@ssl
+
+3.Copy the default Java truststore (cacerts) to the alternate system truststore (jssecacerts). Self-signed certificates are appended to jssecacerts without modifying the default cacerts file.
+	cp /usr/java/jdk1.7.0_67-cloudera/jre/lib/security/cacerts /usr/java/jdk1.7.0_67-cloudera/jre/lib/security/jssecacerts
+
+4.Export the certificate from the keystore (example.keystore).
+	keytool -export -alias centosnn -keystore example.keystore -rfc -file selfsigned.cer
+
+5.
+	cp selfsigned.cer /opt/cloudera/security/x509/centosnn.pem
+
+6. keytool -import -alias centosnn -file /opt/cloudera/security/jks/selfsigned.cer -keystore /usr/java/jdk1.7.0_67-cloudera/jre/lib/security/jssecacerts -storepass changeit
+7 mv /opt/cloudera/security/jks/example.keystore /opt/cloudera/security/jks/centosnn-keystore.jks
+
+8. rm /opt/cloudera/security/jks/selfsigned.cer
+Note: copy the /usr/java/jdk1.7.0_67-cloudera/jre/lib/security/jssecacerts from clouderamanager server to all hosts in cluster
+
+=====================================================================================================================================================
+Creating Self-Signed Test Certificates:
+HDFS
+====
+keytool -genkeypair -keystore /opt/cloudera/security/jks/hdfs.keystore -keyalg RSA \
+-alias centosdn2 -dname "CN=centosdn2.hadoop.com,O=Hadoop" \
+-storepass hadoop@ssl1 -keypass hadoop@ssl1 -validity 90
+
+
+Creating a Custom Truststore Containing Self-Signed Test Certificates
+
+1. Export the test certificate for node1.example.com:
+	keytool -exportcert -keystore hdfs.keystore -alias centosdn2 \
+	-storepass hadoop@ssl1 -file centosdn2.cer
+
+2. Import the test certificate into the custom truststore:
+
+	keytool -importcert -keystore hdfs.truststore -alias centosdn2 \
+	-storepass hadoop_ssltrstr -file centosdn2.cer -noprompt
+
+
+Yarn:
+=====
+
+keytool -genkeypair -keystore /opt/cloudera/security/jks/yarn.keystore -keyalg RSA \
+-alias centosdn2 -dname "CN=centosdn2.hadoop.com,O=Hadoop" \
+-storepass hadoop@ssl2 -keypass hadoop@ssl2 -validity 90
+
+Creating a Custom Truststore Containing Self-Signed Test Certificates
+
+1. Export the test certificate for node1.example.com:
+
+keytool -exportcert -keystore yarn.keystore -alias centosdn2 \
+-storepass hadoop@ssl2 -file centosdn2.cer
+
+2. Import the test certificate into the custom truststore:
+
+keytool -importcert -keystore yarn.truststore -alias centosdn2 \
+-storepass hadoop_ssltrstr -file centosdn2.cer -noprompt
+
+
+
+chown hdfs:hadoop yarn.keystore yarn.truststore
+chmod 0440 yarn.keystore
+chmod 0444 yarn.truststore

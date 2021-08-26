@@ -1,0 +1,8 @@
+zypper -n install php5 php-pear apache2-mod_php5 (php pkgs)
+a2enmod php5 (activating)
+systemctl restart apache2
+zypper install php-ldap
+systemctl restart apache2
+zypper install php5-gettext (get rid on issue common.php file for binerror)
+systemctl restart apache2
+

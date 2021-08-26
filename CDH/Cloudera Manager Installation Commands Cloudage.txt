@@ -1,0 +1,28 @@
+Create 4 Instances with minimum 4 GB ram
+ 
+Tag one as CM
+ 
+connect to all the instance and 
+$ sudo apt-get update
+$ sudo sysctl -w vm.swappiness=0
+ 
+
+ Connect to CM  then follow following steps:
+ 
+$ wget http://archive.cloudera.com/cm5/installer/latest/cloudera-manager-installer.bin
+
+$ chmod u+x cloudera-manager-installer.bin
+
+$ sudo ./cloudera-manager-installer.bin
+
+$ sudo apt-get update 
+
+
+in browser public_ip_of_cm:7180 
+
+username : admin
+
+password : admin 
+
+
+

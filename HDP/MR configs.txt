@@ -1,0 +1,33 @@
+mapreduce.map.memory.mb 7000mb
+mapreduce.reduce.memory.mb 14541mb
+
+
+yarn.app.mapreduce.am.resource.mb 7000
+
+yarn.scheduler.minimum-allocation-mb = 7680 (it is too high)
+
+yarn.scheduler.maximum-allocation-mb 184320 
+
+
+yarn.nodemanager.resources.memoery-mb=184320 (180GB)
+(We can increase it - usually it will be between 75% and 87.5% of RAM)
+currently it is set as 72% of RAM 
+
+If we increase it to 75% we will get 33GB of memory 
+257024   251gb
+current value = 180 GB
+
+
+yarn.scheduler.maximum-allocation-vcores=44
+
+yarn.nodemanager.resources.cpu-vcores = 44
+
+
+
+
+
+mapreduce.map.java.opts -Xmx5600m
+mapreduce.reduce.java.opts -Xmx11632m
+
+
+yarn.app.mapreduce.am.command-opts  -Xmx5600m

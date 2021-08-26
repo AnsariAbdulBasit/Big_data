@@ -1,0 +1,124 @@
+    1  2018-11-13 11:27:33 cd
+    2  2018-11-13 11:27:43 history
+    3  2018-11-13 11:28:39 ls
+    4  2018-11-13 11:30:07 history
+    5  2018-11-13 11:30:10 exit
+    6  2018-11-13 10:57:04 cd
+    7  2018-11-13 10:57:25 zypper -n install openldap2 openldap2-client
+    8  2018-11-13 10:57:43 ps -ef | gerp 11175
+    9  2018-11-13 10:57:49 ps -ef | grep 11175
+   10  2018-11-13 10:57:52 zypper -n install openldap2 openldap2-client
+   11  2018-11-13 10:58:07 vi /etc/sysconfig/openldap
+   12  2018-11-13 10:58:59 mv /etc/openldap/slapd.conf /etc/openldap/slapd.conf.org
+   13  2018-11-13 10:59:08 touch /etc/openldap/slapd.conf
+   14  2018-11-13 10:59:17 rm -rf /etc/openldap/slapd.d/*
+   15  2018-11-13 10:59:23 slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d
+   16  2018-11-13 10:59:32 vi /etc/openldap/slapd.d/cn=config/olcDatabase\={0}config.ldif
+   17  2018-11-13 11:01:34 chown -R ldap. /etc/openldap/slapd.d
+   18  2018-11-13 11:01:40 chmod -R 700 /etc/openldap/slapd.d
+   19  2018-11-13 11:01:46 systemctl start slapd
+   20  2018-11-13 11:01:59 systemctl enable slapd
+   21  2018-11-13 11:02:07 slappasswd
+   22  2018-11-13 11:02:27 vi chrootpw.ldif
+   23  2018-11-13 11:02:57 ldapadd -Y EXTERNAL -H ldapi:/// -f chrootpw.ldif
+   24  2018-11-13 11:03:35 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/core.ldif
+   25  2018-11-13 11:03:49 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+   26  2018-11-13 11:04:07 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif
+   27  2018-11-13 11:04:19 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+   28  2018-11-13 11:04:40 slappasswd
+   29  2018-11-13 11:05:01 vi backend.ldif
+   30  2018-11-13 11:06:44 ldapadd -Y EXTERNAL -H ldapi:/// -f backend.ldif
+   31  2018-11-13 11:06:54 vi basedomain.ldif
+   32  2018-11-13 11:09:06 ldapadd -x -D cn=Manager,dc=test,dc=com -W -f basedomain.ldif
+   33  2018-11-13 11:10:22 cd /etc/ssl/private
+   34  2018-11-13 11:10:32 openssl genrsa -des3 -out server.key 2048
+   35  2018-11-13 11:11:54 ls
+   36  2018-11-13 11:12:00 openssl rsa -in server.key -out server.key
+   37  2018-11-13 11:12:18 openssl req -new -days 3650 -key server.key -out server.csr
+   38  2018-11-13 11:17:24 openssl x509 -in server.csr -out server.crt -req -signkey server.key -days 3650
+   39  2018-11-13 11:17:41 chmod 400 server.key
+   40  2018-11-13 11:17:58 mkdir /etc/openldap/certs
+   41  2018-11-13 11:18:32 cp /etc/ssl/private/server.key /etc/ssl/private/server.crt /etc/ssl/ca-bundle.pem /etc/openldap/certs/
+   42  2018-11-13 11:19:09 ls
+   43  2018-11-13 11:19:13 ls /etc/openldap/certs
+   44  2018-11-13 11:20:16 chown ldap. /etc/openldap/certs/server.key /etc/openldap/certs/server.crt /etc/openldap/certs/ca-bundle.pem
+   45  2018-11-13 11:20:25 vi mod_ssl.ldif
+   46  2018-11-13 11:20:52 ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_ssl.ldif
+   47  2018-11-13 11:21:01 vi /etc/sysconfig/openldap
+   48  2018-11-13 11:30:48 cd
+   49  2018-11-13 11:30:56 cd /etc/openldap/certs/
+   50  2018-11-13 11:30:56 ls
+   51  2018-11-13 11:31:21 find / -name mod_ssl.ldif
+   52  2018-11-13 11:32:17 cd
+   53  2018-11-13 11:32:18 ll
+   54  2018-11-13 11:32:20 ls
+   55  2018-11-13 11:32:22 cd -
+   56  2018-11-13 11:32:24 ls
+   57  2018-11-13 11:32:36 cd /etc/ssl/private/
+   58  2018-11-13 11:32:37 ls
+   59  2018-11-13 11:32:47 vi mod_ssl.ldif
+   60  2018-11-13 11:33:44 vi /etc/sysconfig/openldap
+   61  2018-11-13 11:34:28 systemctl restart slapd
+   62  2018-11-13 11:35:40 cd
+   63  2018-11-13 11:35:41 slappasswd
+   64  2018-11-13 11:37:01 vi ldapuser.ldif
+   65  2018-11-13 11:38:37 ldapadd -x -D cn=Manager,dc=test,dc=com -W -f ldapuser.ldif
+   66  2018-11-13 11:39:06 vi ldapuser.sh
+   67  2018-11-13 11:39:25 ls
+   68  2018-11-13 11:39:34 ls -lrt
+   69  2018-11-13 11:39:45 sh ldapuser.sh
+   70  2018-11-13 11:41:20 vi ldapuser.sh
+   71  2018-11-13 11:41:58 sh ldapuser.sh
+   72  2018-11-13 11:42:37 vi ldapuser.sh
+   73  2018-11-13 11:42:57 sh ldapuser.sh
+   74  2018-11-13 11:43:01 vi ldapuser.sh
+   75  2018-11-13 11:44:55 sh ldapuser.sh
+   76  2018-11-13 11:45:17 ldapadd -x -D cn=Manager,dc=srv,dc=world -W -f ldapuser.ldif
+   77  2018-11-13 11:46:20 ldapadd -x -D cn=Manager,dc=test,dc=com -W -f ldapuser.ldif
+   78  2018-11-13 11:48:16 zypper -n install openldap2-client sssd pam_ldap nss_ldap
+   79  2018-11-13 11:48:26 mv /etc/sssd/sssd.conf /etc/sssd/sssd.conf.org
+   80  2018-11-13 11:48:33 vi /etc/sssd/sssd.conf
+   81  2018-11-13 11:49:43 chmod 600 /etc/sssd/sssd.conf
+   82  2018-11-13 11:49:50 vi /etc/pam.d/common-account
+   83  2018-11-13 11:51:03 vi /etc/pam.d/common-auth
+   84  2018-11-13 11:51:39 vi /etc/pam.d/common-password
+   85  2018-11-13 11:52:15 vi /etc/pam.d/common-session
+   86  2018-11-13 11:52:42 vi /etc/nsswitch.conf
+   87  2018-11-13 11:53:45 systemctl enable sssd nscd
+   88  2018-11-13 11:53:54 history
+   89  2018-11-13 11:54:19 reboot
+   90  2018-11-13 12:09:27 ls
+   91  2018-11-13 12:09:27 cd
+   92  2018-11-13 12:09:28 ls
+   93  2018-11-13 12:09:35 wget https://sourceforge.net/projects/phpldapadmin/files/latest/download
+   94  2018-11-13 12:09:56 ls
+   95  2018-11-13 12:10:07 du -sh *
+   96  2018-11-13 12:10:38 rm -rf download download.1
+   97  2018-11-13 12:14:22 exit
+   98  2018-11-13 13:36:44 cd /srv/www/htdocs/phpldapadmin/
+   99  2018-11-13 13:36:47 ls -lrt
+  100  2018-11-13 13:37:25 find -name password_hash
+  101  2018-11-13 13:37:32 find -name *password_hash*
+  102  2018-11-13 13:37:37 find / -name *password_hash*
+  103  2018-11-13 13:38:37 cd lib/
+  104  2018-11-13 13:38:37 ls
+  105  2018-11-13 13:38:41 ls -lrt
+  106  2018-11-13 13:39:08 vi PageRender.php
+  107  2018-11-13 13:50:05 vi ds_ldap.php
+  108  2018-11-13 13:55:18 vi ds_ldap_pla.php
+  109  2018-11-13 13:56:42 vi functions.php
+  110  2018-11-13 14:03:13 systemctl restart apache2
+  111  2018-11-13 14:03:59 vi PageRender.php
+  112  2018-11-13 14:04:32 vi ds_ldap.php
+  113  2018-11-13 14:04:47 vi ds_ldap_pla.php
+  114  2018-11-13 14:05:40 vi functions.php
+  115  2018-11-13 14:13:42 vi common.php
+  116  2018-11-13 14:14:55 zypper remove php7 php7-mysql apache2-mod_php7
+  117  2018-11-13 14:15:09 zypper -n install php5 php-pear apache2-mod_php5
+  118  2018-11-13 14:15:17 a2enmod php5
+  119  2018-11-13 14:15:24 systemctl restart apache2
+  120  2018-11-13 14:18:35 zypper install php-ldap
+  121  2018-11-13 14:18:49 systemctl restart apache2
+  122  2018-11-13 14:21:23 zypper install php5-gettext
+  123  2018-11-13 14:21:29 systemctl restart apache2
+  124  2018-11-13 14:22:07 history

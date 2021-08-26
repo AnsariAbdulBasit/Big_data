@@ -1,0 +1,8 @@
+sudo ssh -L 1085:localhost:7180 haadmin@35.227.154.245
+sudo ssh -D 1085 -f -C -q -N haadmin@35.227.154.245
+ 
+Uncomment in /etc/ssh/sshd_config
+ 
+PubkeyAuthentication yes
+PasswordAuthentication yes
+AllowTcpForwarding yes

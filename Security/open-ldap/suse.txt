@@ -1,0 +1,126 @@
+ip-172-31-2-220:~ # zypper -n install openldap2 openldap2-client
+System management is locked by the application with pid 11175 (zypper).
+Close this application before trying again.
+ip-172-31-2-220:~ # ps -ef | gerp 11175
+If 'gerp' is not a typo you can use command-not-found to lookup the package that contains it, like this:
+    cnf gerp
+ip-172-31-2-220:~ # ps -ef | grep 11175
+root     14062  9119  0 10:57 pts/0    00:00:00 grep 11175
+ip-172-31-2-220:~ # zypper -n install openldap2 openldap2-client
+Refreshing service 'SMT-http_smt-ec2_susecloud_net'.
+Refreshing service 'cloud_update'.
+Loading repository data...
+Reading installed packages...
+Resolving package dependencies...
+
+The following NEW package is going to be installed:
+  openldap2
+
+The following package is going to be upgraded:
+  openldap2-client
+
+1 package to upgrade, 1 new.
+Overall download size: 1.3 MiB. Already cached: 0 B. After the operation, additional 3.1 MiB will be used.
+Continue? [y/n/...? shows all options] (y): y
+Retrieving package openldap2-2.4.41-18.40.1.x86_64                                                                      (1/2),   1.1 MiB (  3.1 MiB unpacked)
+Retrieving: openldap2-2.4.41-18.40.1.x86_64.rpm .......................................................................................................[done]
+Retrieving package openldap2-client-2.4.41-18.40.1.x86_64                                                               (2/2), 163.5 KiB (568.4 KiB unpacked)
+Retrieving: openldap2-client-2.4.41-18.40.1.x86_64.rpm ................................................................................................[done]
+Checking for file conflicts: ..........................................................................................................................[done]
+(1/2) Installing: openldap2-2.4.41-18.40.1.x86_64 .....................................................................................................[done]
+Additional rpm output:
+Updating /etc/sysconfig/openldap...
+
+
+(2/2) Installing: openldap2-client-2.4.41-18.40.1.x86_64 ..............................................................................................[done]
+ip-172-31-2-220:~ # vi /etc/sysconfig/openldap
+ip-172-31-2-220:~ # mv /etc/openldap/slapd.conf /etc/openldap/slapd.conf.org
+ip-172-31-2-220:~ # touch /etc/openldap/slapd.conf
+ip-172-31-2-220:~ # rm -rf /etc/openldap/slapd.d/*
+ip-172-31-2-220:~ # slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d
+config file testing succeeded
+ip-172-31-2-220:~ # vi /etc/openldap/slapd.d/cn=config/olcDatabase\={0}config.ldif
+ip-172-31-2-220:~ # vi /etc/openldap/slapd.d/cn=config/olcDatabase\={0}config.ldif
+ip-172-31-2-220:~ # chown -R ldap. /etc/openldap/slapd.d
+ip-172-31-2-220:~ # chmod -R 700 /etc/openldap/slapd.d
+ip-172-31-2-220:~ # systemctl start slapd
+ip-172-31-2-220:~ # systemctl enable slapd
+Created symlink from /etc/systemd/system/multi-user.target.wants/slapd.service to /usr/lib/systemd/system/slapd.service.
+ip-172-31-2-220:~ # slappasswd
+New password:
+Re-enter new password:
+{SSHA}Lj8KK3fdUjCeGdEGwavJi7+LkK56UAkh
+ip-172-31-2-220:~ # vi chrootpw.ldif
+ip-172-31-2-220:~ # vi chrootpw.ldif
+ip-172-31-2-220:~ # ldapadd -Y EXTERNAL -H ldapi:/// -f chrootpw.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+modifying entry "olcDatabase={0}config,cn=config"
+
+ip-172-31-2-220:~ # ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/core.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+adding new entry "cn=core,cn=schema,cn=config"
+
+ip-172-31-2-220:~ # ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+adding new entry "cn=cosine,cn=schema,cn=config"
+
+ip-172-31-2-220:~ # ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+adding new entry "cn=nis,cn=schema,cn=config"
+
+ip-172-31-2-220:~ # ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+adding new entry "cn=inetorgperson,cn=schema,cn=config"
+
+ip-172-31-2-220:~ # slappasswd
+New password:
+Re-enter new password:
+{SSHA}7mmnGr89cYyzWWG2G6HP0XcF5jkTFOAq
+ip-172-31-2-220:~ # vi backend.ldif
+ip-172-31-2-220:~ # vi backend.ldif
+ip-172-31-2-220:~ # ldapadd -Y EXTERNAL -H ldapi:/// -f backend.ldif
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+adding new entry "cn=module,cn=config"
+
+adding new entry "olcDatabase=hdb,cn=config"
+
+ip-172-31-2-220:~ # vi basedomain.ldif
+ip-172-31-2-220:~ # vi basedomain.ldif
+ip-172-31-2-220:~ # vi basedomain.ldif
+ip-172-31-2-220:~ # vi basedomain.ldif
+ip-172-31-2-220:~ # ldapadd -x -D cn=Manager,dc=test,dc=com -W -f basedomain.ldif
+Enter LDAP Password:
+adding new entry "dc=test,dc=com"
+
+adding new entry "cn=Manager,dc=test,dc=com"
+
+adding new entry "ou=People,dc=test,dc=com"
+
+adding new entry "ou=Group,dc=test,dc=com"
+
+ip-172-31-2-220:~ # cd /etc/ssl/private
+ip-172-31-2-220:/etc/ssl/private # openssl genrsa -des3 -out server.key 2048
+Generating RSA private key, 2048 bit long modulus
+.................................................+++
+.......................................................................+++
+e is 65537 (0x10001)
+Enter pass phrase for server.key:
+Verifying - Enter pass phrase for server.key:
+ip-172-31-2-220:/etc/ssl/private # ls
+server.key
+ip-172-31-2-220:/etc/ssl/private # openssl rsa -in server.key -out server.key
+Enter pass phrase for server.key:
+writing RSA key
+ip-172-31-2-220:/etc/ssl/private # openssl req -new -days 3650 -key server.key -out server.csr

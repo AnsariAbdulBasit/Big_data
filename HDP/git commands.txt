@@ -1,0 +1,7 @@
+ 1064  git init .
+ 1065  git remote add origin https://github.com/AnsariAbdulBasit/cis-benchmark-ansible.git
+ 1066  git status
+ 1067  git add .
+ 1068  git status
+ 1069  git commit -m "CIS-Bechmark role created"
+ 1070  git push origin master

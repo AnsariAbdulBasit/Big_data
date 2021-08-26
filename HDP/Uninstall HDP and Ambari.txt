@@ -1,0 +1,100 @@
+#Login Ambari and delete all the services from Ambari UI
+
+ambari-server stop
+ambari-server reset
+ambari-agent stop
+apt-get -y remove ambari-server
+apt-get -y remove ambari-agent
+apt-get -y remove ambari-metrics-assembly
+
+dpkg --list | grep ambari
+apt-get -y purge ambari-server
+apt-get -y purge ambari-agent 
+apt-get -y purge ambari-metrics-assembly
+
+ps -ef | grep ambari
+#kill ambari processes
+
+rm -rf /var/lib/ambari-server /var/run/ambari-server /usr/lib/amrbari-server /etc/ambari-server /var/log/ambari-server /usr/lib/python2.6/site-packages/ambari*
+
+rm -rf /var/lib/ambari-agent /var/run/ambari-agent /usr/lib/amrbari-agent rm -rf /usr/lib/amrbari-agent
+rm -rf /usr/lib/amrbari-agent /etc/ambari-agent /var/log/ambari-agent /usr/lib/python2.6/site-packages/ambari*
+
+rm -rf /data/data2/hadoop/yarn/local/usercache/ambari-qa
+rm -rf /data/hdisk1/hadoop*/data/data1/SupportCluster /data/data1/hadoop /var/log/upstart/ /var/lib/dpkg/info/ambari-server.list /var/lib/dpkg/info/ambari-server.postrm /usr/lib/ambari-server /usr/lib/ambari-server/lib/ambari_commons /usr/lib/ambari-server/lib/ambari_jinja2 /usr/lib/ambari-server/lib/ambari_simplejson /usr/lib/python2.6/site-packages/resource_monitoring/ambari_commons /usr/sbin/ambari_server_main.pyc /etc/apt/sources.list.d/ambari.list /tmp/ambari.properties.2 /tmp/ambari.properties.1
+
+rm -rf /data/hdisk1/hadoop/yarn/local/usercache/ambari-qa /data/data1/SupportCluster/logs/ambari-metrics-monitor /data/data1/SupportCluster/logs/ambari-metrics-monitor/ambari-metrics-monitor.out
+rm -rf /etc/ambari* /home/ambari* /run/ambari* /usr/sbin/ambari* /usr/lib/ambari* /usr/lib/flume* /usr/lib/storm/* /usr/lib/python2.6_bkp/site-packages/ambari* /usr/lib/python2.6_bkp/site-packages/resource_monitoring/ambari* /usr/lib/python2.6_bkp/site-packages/ambari* /var/log/ambari* /var/lib/dpkg/info/ambari*
+
+sudo echo never > /sys/kernel/mm/transparent_hugepage/enabled
+
+rm -rf /etc/hbase /etc/zookeeper /etc/hive-hcatalog /etc/tez /etc/hive-webhcat /etc/pig /var/run/hadoop /var/run/hive /var/run/webhcat /var/run/hadoop-hdfs /var/run/hadoop-yarn /var/run/hadoop-mapreduce /var/log/hbase /var/log/hive /var/log/zookeeper /var/log/hive-hcatalog /var/log/hadoop-hdfs /var/log/hadoop-yarn /var/log/hadoop-mapreduce /usr/lib/storm /var/lib/hive-hcatalog /tmp/hadoop-hdfs /etc/hive
+
+rm -rf /etc/alternatives/hadoop* /etc/hadoop* /data/hadoop* /home/vkyvos/hadoop-* /usr/lib/ams* /usr/lib/cmf/agent/build/env/lib/python2.7/site-packages/cmf-5.8.2-py2.7.egg/cmf/monitor/generic/hadoop_adapter.pyc /usr/bin/hadoop* /var/log/hadoop* /var/lib/dpkg/alternatives/hadoop* /var/lib/hadoop-* /var/log/hadoop* /etc/ranger/Support_hadoop* /tmp/hadoop* /data/data2/hadoop* /data/data1/SupportCluster/data/hadoop* /data/hdisk1/hadoop* /hadoop* /usr/hdp*
+
+deluser hive
+deluser zookeeper
+deluser oozie
+deluser ams
+deluser ambari-qa
+deluser flume
+deluser tez
+deluser hdfs
+deluser sqoop
+deluser yarn
+deluser mapred
+deluser hcat
+deluser hbase
+deluser kms
+deluser sqoop2
+deluser spark
+deluser hue
+
+
+find / -name *ambari*
+find / -name hdp
+find / -name *hadoop*
+#Remove all dir	 
+
+
+dpkg --list | grep hadoop
+apt-get purge hadoop*
+
+dpkg --list | grep hive
+#Purge all hive packages
+apt-get purge hive-2*
+apt-get purge ranger-2-4-3-0-227-hive-plugin
+
+apt-get autoclean
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+sometimes we may get bewlow error while re-installing Ambari server on same host
+
+Ambari Server java process died with exitcode 255. Check /var/log/ambari-server/ambari-server.out 
+tail -f /var/log/ambari-server/ambari-server.log
+Error:
+Failed to run the Ambari Server org.apache.ambari.server.AmbariException: 
+Current database store version is not compatible with current server version, serverVersion=2.2.1.0, schemaVersion=2.2.0.0 
+at org.apache.ambari.server.controller.utilities.DatabaseChecker.checkDBVersion(DatabaseChecker.java:185) 
+at org.apache.ambari.server.controller.AmbariServer.main(AmbariServer.java:812)
+
+Resolution:
+dpkg --list | grep postgres
+sudo apt-get --purge remove postgresql postgresql-doc postgresql-common
+apt-get remove postgresql-client-9.3
+apt-get remove postgresql-client-common
+
+find / -name pg*
+rm -rf /etc/postgresql/9.3/main/pg_hba_bak.conf.old
+ambari-server install
+apt-get install ambari-server
+ambari-server setup
+ambari-server start
+
+
+
+
+
+
+

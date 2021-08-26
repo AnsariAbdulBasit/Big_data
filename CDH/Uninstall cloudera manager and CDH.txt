@@ -1,0 +1,73 @@
+﻿1) Stop all Cluster services from Cloudera Manager Admin Web page.
+
+2) Stop all Cloudera Management Services.
+
+3) Remove downloaded parcels which were used for installlation purpose. On Cloudera Manager Admin console, click on Parcel indicator icon in the top navigation bar. 
+For each installed parcel, deactive the parcel followed by removing it.
+
+4) Uninstall Cloudera Manager Server. Since I installed cloudera manager server using using cloudera-manager-installer.bin, I had to use the following command:
+sudo rm -rf /usr/share/cmf/uninstall-cloudera-manager.sh
+
+
+All the steps below MUST be executed on each node in the cluster.
+1) Stop Cloudera Manager Agent using the following command:
+sudo service cloudera-scm-agent hard_stop
+
+2) Uninstall software by executing the follwoing command:
+sudo apt-get remove ‘cloudera-manager-*’
+sudo apt-get clean all
+
+Remove data files and Cloudera Manager from each node in cluster.
+1) Remove cloudera Manager data. When you install Cloudera Manager, it creates a partition on each agent host and mounts it as cm_processes. You will have to un mount cm_processes using the following command:
+sudo umount cm_processes
+
+2) Remove Cloudera Manager data by running the following command:
+sudo rm -Rf /usr/share/cmf /var/lib/cloudera* /var/cache/yum/cloudera* /var/log/cloudera* /var/run/cloudera*
+
+Please note that if you do not unmount cm_processes as described in Step 1, you will get error meaasge ‘rm: cannot remove `/var/run/cloudera-scm-agent/process’: Device or resource busy’
+
+3) Remove CDH data by executing following commands:
+sudo rm -Rf /dfs /mapred /yarn (please change these paths based on how you setup your cluster)
+sudo rm -Rf /var/lib/flume-ng /var/lib/hadoop* /var/lib/hue /var/lib/oozie /var/lib/solr /var/lib/sqoop*
+
+4) Kill the following Cloudera/Hadoop eco-system processes (if running ) on each node:
+hdfs
+mapred
+cloudera-scm
+hbase
+hue
+zookeeper
+oozie
+hive
+impala
+flume
+
+
+5) Remove any remaining Cloudera specific files by executing the following command:
+sudo rm -Rf /opt/cloudera /etc/hadoop /etc/cloudera-scm-agent /etc/hive /var/run/hdfs-* /var/lib/hive /var/lib/alternatives/hive-conf /etc/alternatives/hive-conf /var/run/hbase /var/log/impalad /var/run/impala /var/lib/impala /var/run/sqoop2 /var/run/solr /var/run/zookeeper /var/run/hadoop-httpfs /var/lib/alternatives/hadoop-conf /etc/alternatives/hadoop-conf
+
+6) Remove Cloudera Manager lock file by executing the following command:
+sudo rm /tmp/.scm_prepare_node.lock
+
+7) Stop and remove any external databases that you might have setup for Hive metastore, Oozie.
+
+find / -name cloudera*
+
+remove all the path where cloudera is installed
+
+Remove all packages
+
+dpkg --list | grep cloudera
+dpkg --purge cloudera-manager-server
+dpkg --purge cloudera-manager-agent
+dpkg --purge cloudera-manager-daemons
+dpkg --purge cloudera-manager-server-db-2
+
+sudo apt-get autoclean
+
+Kill cloudera process 
+ps -ef | grep cloudera
+kill -9 <ID>
+
+
+8) Done
